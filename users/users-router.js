@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const Users = require('./users-model.js');
-//const restricted = require('../auth/restricted-middleware.js');
+const restricted = require('../auth/auth-middleware.js');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
