@@ -1,6 +1,7 @@
 module.exports = {
     addUser, 
-    findUserById
+    findUserById,
+    findBy
 }
 
 const db = require('../data/db-config.js');
@@ -17,4 +18,8 @@ function findUserById(id) {
     return db('users')
         .where({id: id})
         .first();
+}
+
+function findBy(filter) {
+    return db('users').where(filter);
 }
