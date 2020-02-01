@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     res.status(200).send('Welcome to Users Router');
 })
 
+// User entry endpoints
 
 router.post('/register', (req, res) => {
     let user = req.body;
@@ -63,4 +64,43 @@ router.post('/register', (req, res) => {
     return jwt.sign(payload, secret, options);
   }
   
+
+/*
+PUT api/:id
+Updates a user profile
+*/
+
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    Users.updateUser(id, req.body)
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(500).json({error: err, message: `Failure to update user with id ${id}`})
+        });
+});
+
+/*
+DELETE api/:id
+Removes a user
+ */
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    Users.removeUser(id)
+    .then(deleted => {
+        if (deleted) {
+            res.json({ message: `Successfully deleted user with id ${id}` });
+        }
+        else {
+            res.status(404).json({ message: 'Could not find the user with the given ID'})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ error: err, message: 'Failed to delete the user' })    
+    });
+});
+
 module.exports = router;
