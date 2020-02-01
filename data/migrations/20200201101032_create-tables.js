@@ -20,7 +20,7 @@ exports.up = function(knex) {
         tbl.string('business_name', 128);
         tbl.string('url_string')
             .notNullable();
-        tbl.string('card_owner', 128)
+        tbl.integer('card_owner')
             .unsigned()
             .notNullable()
             .references('id')
@@ -33,14 +33,14 @@ exports.up = function(knex) {
     })
     .createTable('user_card_connections', tbl => {
         tbl.increments();
-        tbl.string('user_id', 128)
+        tbl.integer('user_id')
             .unsigned()
             .notNullable()
             .references('id')
             .inTable('users')
             .onUpdate('CASCADE')
             .onDelete('RESTRICT');
-        tbl.string('card_id', 128)
+        tbl.integer('card_id')
             .unsigned()
             .notNullable()
             .references('id')
