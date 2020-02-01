@@ -1,7 +1,9 @@
 module.exports = {
     addUser, 
     findUserById,
-    findBy
+    findBy,
+    updateUser,
+    removeUser
 }
 
 const db = require('../data/db-config.js');
@@ -23,3 +25,17 @@ function findUserById(id) {
 function findBy(filter) {
     return db('users').where(filter);
 }
+
+function updateUser(id, updatedUser) {
+    return db('users')
+        .where({id: id})
+        .update(updatedUser)
+        .then( () => {
+            return findUserById(id);
+        })
+}
+
+function removeUser(id) {
+    return db('users').where({ id }).del();
+}
+
