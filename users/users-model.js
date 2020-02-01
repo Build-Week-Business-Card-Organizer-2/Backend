@@ -3,7 +3,7 @@ module.exports = {
     findUserById
 }
 
-const db = require('../data/db-conf.js');
+const db = require('../data/db-config.js');
 
 function addUser(newUser) {
     db('users')
