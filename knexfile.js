@@ -43,7 +43,7 @@ module.exports = {
   production: {
     client: 'sqlite3',
     connection: {
-      filename: process.env.DATABASE_URL,
+      filename: './data/users.db3'
     },
     useNullAsDefault: true,
     migrations: {
