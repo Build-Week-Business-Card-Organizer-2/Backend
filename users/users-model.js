@@ -15,7 +15,7 @@ function addUser(newUser) {
 }
 
 function findUserById(user_id) {
-    db('users')
+  return db('users')
         .where({id: user_id})
         .first();
 }
