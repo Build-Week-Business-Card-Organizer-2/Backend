@@ -8,7 +8,7 @@ module.exports = {
 
 const db = require('../data/db-config.js');
 
-function addUser(newUser) {
+function addUser(newUser, id) {
     return db('users')
         .insert(newUser)
         .then(ids => {
