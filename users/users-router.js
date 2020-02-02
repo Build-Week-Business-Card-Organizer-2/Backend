@@ -31,15 +31,22 @@ router.use('/cards', CardsRouter);
 
 router.post('/register', (req, res) => {
     let user = req.body;
-    console.log("user body to add to db: ", user)
+    //console.log("user body to add to db: ", user)
     const hash = bcrypt.hashSync(user.password, 12);
     user.password = hash;
-    console.log('hash: ',  hash);
+    //console.log('hash: ',  hash);
     Users.addUser(user)
         .then(saved => {
-            console.log("saved :", saved);
+           // console.log("saved :", saved);
+           const user_to_return = {
+               //return everything except password
+               "id": saved.id,
+                "username": saved.username,
+                "name": saved.name,
+                "job_description": saved.job_description
+           }
             const token = generateToken(user);
-            res.status(201).json({user: saved, token: token})
+            res.status(201).json({user: user_to_return, token: token})
         })
         .catch(err => {
             console.log("error after POST", err);
