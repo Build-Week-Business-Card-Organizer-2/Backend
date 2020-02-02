@@ -35,7 +35,7 @@ router.get('/', (req, res) => {
 });
 
 // nested router for cards endpoints
-router.use('/cards', CardsRouter);
+router.use('/cards', restricted, CardsRouter);
 
 
 // User entry endpoints
