@@ -4,13 +4,28 @@ require('dotenv').config();
 const Users = require('./users-model.js');
 const restricted = require('../auth/auth-middleware.js');
 const jwt = require('jsonwebtoken');
+const CardsRouter = require('../cards/cards-router.js');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
     //temporary response for now
-    res.status(200).send('Welcome to Users Router');
-})
+    //res.status(200).send('Welcome to Users Router');
+    Users.getUsers()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err,
+                message: 'Failed to retrieve users'
+                })
+        });
+});
+
+// nested router for cards endpoints
+router.use('/cards', CardsRouter);
+
 
 // User entry endpoints
 

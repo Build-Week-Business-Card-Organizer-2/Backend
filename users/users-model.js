@@ -3,10 +3,15 @@ module.exports = {
     findUserById,
     findBy,
     updateUser,
-    removeUser
+    removeUser,
+    getUsers
 }
 
 const db = require('../data/db-config.js');
+
+function getUsers() {
+    return db('users');
+}
 
 function addUser(newUser) {
     console.log("in addUser");
