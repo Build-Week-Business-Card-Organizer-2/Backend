@@ -16,14 +16,18 @@ router.get('/', (req, res) => {
 
 router.post('/register', (req, res) => {
     let user = req.body;
+    console.log("user body to add to db: ", user)
     const hash = bcrypt.hashSync(user.password, 12);
     user.password = hash;
+    console.log('hash: ',  hash);
     Users.addUser(user)
         .then(saved => {
+            console.log("saved :", saved);
             const token = generateToken(user);
             res.status(201).json({user: saved, token: token})
         })
         .catch(err => {
+            console.log("error after POST", err);
             res.status(500).json({error: err, message: 'Failure to add user'})
         });
   });
