@@ -8,9 +8,9 @@ module.exports = {
 
 const db = require('../data/db-config.js');
 
-function addUser(newUser, id) {
+function addUser(newUser) {
     return db('users')
-        .insert(newUser)
+        .insert(newUser, 'id')
         .then(ids => {
             return findUserById(ids[0]);
         });
