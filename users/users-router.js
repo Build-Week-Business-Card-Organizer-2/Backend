@@ -13,7 +13,18 @@ router.get('/', (req, res) => {
     //res.status(200).send('Welcome to Users Router');
     Users.getUsers()
         .then(users => {
-            res.status(200).json(users);
+            const usersList = users.map(user => {
+                return (
+                    {
+                    //return everything except password
+                    "id": user.id,
+                    "username": user.username,
+                    "name": user.name,
+                    "job_description": user.job_description    
+                    }
+                )
+            });
+            res.status(200).json(usersList);
         })
         .catch(err => {
             res.status(500).json({
