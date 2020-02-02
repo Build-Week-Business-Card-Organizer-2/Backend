@@ -61,11 +61,19 @@ router.post('/register', (req, res) => {
       .first()
       .then(user => {
           if (user && bcrypt.compareSync(password, user.password)) {
-              const token = generateToken(user)
+              const token = generateToken(user);
+              const user_to_return = {
+                //return everything except password
+                "id": user.id,
+                 "username": user.username,
+                 "name": user.name,
+                 "job_description": user.job_description
+            }
               res.status(200).json({
                   message: `Welcome ${user.name}`,
                   status: 'Logged in',
-                  token: token
+                  token: token,
+                  user: user_to_return
               });
           }
           else {
