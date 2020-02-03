@@ -8,12 +8,23 @@ const CardsRouter = require('../cards/cards-router.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
     //temporary response for now
     //res.status(200).send('Welcome to Users Router');
     Users.getUsers()
         .then(users => {
-            res.status(200).json(users);
+            const usersList = users.map(user => {
+                return (
+                    {
+                    //return everything except password
+                    "id": user.id,
+                    "username": user.username,
+                    "name": user.name,
+                    "job_description": user.job_description    
+                    }
+                )
+            });
+            res.status(200).json(usersList);
         })
         .catch(err => {
             res.status(500).json({
@@ -24,22 +35,29 @@ router.get('/', (req, res) => {
 });
 
 // nested router for cards endpoints
-router.use('/cards', CardsRouter);
+router.use('/cards', restricted, CardsRouter);
 
 
 // User entry endpoints
 
 router.post('/register', (req, res) => {
     let user = req.body;
-    console.log("user body to add to db: ", user)
+    //console.log("user body to add to db: ", user)
     const hash = bcrypt.hashSync(user.password, 12);
     user.password = hash;
-    console.log('hash: ',  hash);
+    //console.log('hash: ',  hash);
     Users.addUser(user)
         .then(saved => {
-            console.log("saved :", saved);
+           // console.log("saved :", saved);
+           const user_to_return = {
+               //return everything except password
+               "id": saved.id,
+                "username": saved.username,
+                "name": saved.name,
+                "job_description": saved.job_description
+           }
             const token = generateToken(user);
-            res.status(201).json({user: saved, token: token})
+            res.status(201).json({user: user_to_return, token: token})
         })
         .catch(err => {
             console.log("error after POST", err);
@@ -54,11 +72,19 @@ router.post('/register', (req, res) => {
       .first()
       .then(user => {
           if (user && bcrypt.compareSync(password, user.password)) {
-              const token = generateToken(user)
+              const token = generateToken(user);
+              const user_to_return = {
+                //return everything except password
+                "id": user.id,
+                 "username": user.username,
+                 "name": user.name,
+                 "job_description": user.job_description
+            }
               res.status(200).json({
                   message: `Welcome ${user.name}`,
                   status: 'Logged in',
-                  token: token
+                  token: token,
+                  user: user_to_return
               });
           }
           else {
