@@ -30,11 +30,16 @@ function getCardById(id) {
 }
 
 function addCard(card) {
+    const user_id = card.card_owner;
     return db('cards').insert(card, 'id')
     .then((ids) => {
         //console.log('id returned after adding card: ',  ids[0]);
-        return getCardById(ids[0])
-    })   
+        //automatically add card to user's collection
+        return addCardToCollection(user_id, ids[0])
+            .then(() => {
+                return getCardById(ids[0])
+            });
+    });   
 };
 
 function updateCard(newCard, id) {
