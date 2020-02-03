@@ -25,7 +25,8 @@ function getUserCards(user_id) {
 
 function getCardById(id) {
     return db('cards')
-        .where({id: id});
+        .where({id: id})
+        .first();
 }
 
 function addCard(card) {

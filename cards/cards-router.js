@@ -42,6 +42,29 @@ router.get('/:id/collection', (req, res) => {
         });
 });
 
+/*
+GET api/cards/:id
+Gets a card by its id
+*/
+
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    Cards.getCardById(id)
+        .then(card => {
+            if (card) {
+                res.status(200).json(card);
+            } else {
+                res.status(404).json({message: `Card with id ${id} was not found in the database.`});
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err,
+                message: `Error occurred while attempting to retrieve card with id ${id} from the database.`
+            });
+        });     
+});
+
 /* POST api/cards
 Adds a card to the database */
 
