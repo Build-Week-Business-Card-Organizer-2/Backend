@@ -8,7 +8,7 @@ const CardsRouter = require('../cards/cards-router.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
     //temporary response for now
     //res.status(200).send('Welcome to Users Router');
     Users.getUsers()
