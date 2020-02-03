@@ -8,7 +8,7 @@ module.exports = {
       host: 'localhost',
       post: 5432,
       user: 'postgres',
-      password: 'Lambda1991',
+      password: process.env.LOCAL_PASSWORD,
       database: 'users'
     },
     migrations: {
@@ -30,7 +30,7 @@ module.exports = {
        host: 'localhost',
        post: 5432,
        user: 'postgres',
-       password: 'Lambda1991',
+       password: process.env.LOCAL_PASSWORD,
        database: 'users'
     },
     */
