@@ -20,7 +20,10 @@ router.get('/', restricted, (req, res) => {
                     "id": user.id,
                     "username": user.username,
                     "name": user.name,
-                    "job_description": user.job_description    
+                    "job_description": user.job_description,
+                    "email": user.email,
+                    "phone_number": user.phone_number,
+                    "profile_img_src": user.profile_img_src  
                     }
                 )
             });
@@ -54,7 +57,12 @@ router.post('/register', (req, res) => {
                 "id": saved.id,
                 "username": saved.username,
                 "name": saved.name,
-                "job_description": saved.job_description
+                "job_description": saved.job_description,
+                "email": user.email,
+                "phone_number": user.phone_number,
+                "profile_img_src": user.profile_img_src 
+                
+
            }
             const token = generateToken(user);
             res.status(201).json({user: user_to_return, token: token})
@@ -78,7 +86,10 @@ router.post('/register', (req, res) => {
                  "id": user.id,
                  "username": user.username,
                  "name": user.name,
-                 "job_description": user.job_description
+                 "job_description": user.job_description,
+                 "email": user.email,
+                "phone_number": user.phone_number,
+                "profile_img_src": user.profile_img_src 
             }
               res.status(200).json({
                   message: `Welcome ${user.name}`,
