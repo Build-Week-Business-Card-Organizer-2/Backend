@@ -60,7 +60,7 @@ router.post('/register', (req, res) => {
             res.status(201).json({user: user_to_return, token: token})
         })
         .catch(err => {
-            console.log("error after POST", err);
+            // console.log("error after POST", err);
             res.status(500).json({error: err, message: 'Failure to add user'})
         });
   });
