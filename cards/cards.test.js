@@ -313,3 +313,83 @@ describe('Get /api/cards', () => {
                     });          
         });
     });
+
+    describe('DELETE api/cards/:user_id/:card_id', () => {
+        it('returns a status code of 200 after successfully deleting card from a collection', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    const user_id = response.body.user.id;
+                    //create a new card, NOT in this user's collection (YET...)
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send({
+                            "person_name": `Lambda${randomNum}`,
+                            "business_name": "testBusiness",
+                            "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
+                            "card_owner": 1,
+                            "category": "testCategory"
+                        }) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            //now we're ready to add the card to the user's collection
+                            return request(server)
+                                .post(`/api/cards/${user_id}/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(secondTolastRes => {
+                                    //Finally, deleting card from the collection
+                                    return request(server)
+                                        .delete(`/api/cards/${user_id}/${card_id}`)
+                                        .set('Authorization', currentToken)
+                                        .then(lastRes => {
+                                            expect(lastRes.status).toBe(200);
+                                        });
+                                });
+
+                        });
+                    });          
+        });
+
+        it('returns a message with user id and card id after successfully deleting card from a collection', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    const user_id = response.body.user.id;
+                    //create a new card, NOT in this user's collection (YET...)
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send({
+                            "person_name": `Lambda${randomNum}`,
+                            "business_name": "testBusiness",
+                            "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
+                            "card_owner": 1,
+                            "category": "testCategory"
+                        }) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            //now we're ready to add the card to the user's collection
+                            return request(server)
+                                .post(`/api/cards/${user_id}/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(secondTolastRes => {
+                                    //Finally, deleting card from the collection
+                                    return request(server)
+                                        .delete(`/api/cards/${user_id}/${card_id}`)
+                                        .set('Authorization', currentToken)
+                                        .then(lastRes => {
+                                            expect(lastRes.body.message).toEqual(`Deleted card of id ${card_id} from collection of user ${user_id}`);
+                                        });
+                                });
+
+                        });
+                    });          
+        });
+
+
+    });
