@@ -196,3 +196,53 @@ describe('Get /api/cards', () => {
                 });
         });
     });
+
+    describe('DELETE api/cards/:id', () => {
+        it('returns a 200 OK after deleting card', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    // create a card next
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send(testCard) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            return request(server)
+                                .delete(`/api/cards/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(lastRes => {
+                                    expect(lastRes.status).toBe(200);
+                                });
+                        });
+
+                    });    
+        });
+
+        it('returns a message with correct id after deleting card', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    // create a card next
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send(testCard) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            return request(server)
+                                .delete(`/api/cards/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(lastRes => {
+                                    expect(lastRes.body.message).toEqual(`Successfully deleted card of ${card_id}`);
+                                });
+                        });
+
+                    });    
+        });
+    });
