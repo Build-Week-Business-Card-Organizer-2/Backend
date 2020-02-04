@@ -14,12 +14,12 @@ function getUsers() {
 }
 
 function addUser(newUser) {
-    console.log("in addUser");
-    console.log("newUser to be added in addUser:", newUser);
+    // console.log("in addUser");
+    // console.log("newUser to be added in addUser:", newUser);
     return db('users')
         .insert(newUser, 'id')
         .then(ids => {
-            console.log('ids returned after insert: ', ids);
+            // console.log('ids returned after insert: ', ids);
             return findUserById(ids[0]);
         });
 }
