@@ -11,7 +11,7 @@ server.use(express.json());
 server.use(helmet());
 server.use(morgan('tiny'));
 server.use(cors());
-server.use('/api', usersRouter);
+server.use('/api/users', usersRouter);
 
 server.get('/', (req, res) => res.status(200).json({message: `API up and running on port ${port}`}))
 
