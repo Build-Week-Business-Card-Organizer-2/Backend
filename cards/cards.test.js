@@ -128,3 +128,71 @@ describe('Get /api/cards', () => {
             })
         })
     });
+
+    describe('GET /api/cards/:id', () => {
+        it('returns a 200 status code after retreiving card', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                .get('/api/cards/1')
+                .set('Authorization', currentToken)
+                .then(res => {
+                    expect(res.status).toBe(200);
+                });
+            });
+        });
+
+        it('returns a url_string property after retreiving card', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                .get('/api/cards/1')
+                .set('Authorization', currentToken)
+                .then(res => {
+                    expect(res.body).toHaveProperty('url_string');
+                });
+            });
+        });
+    });
+
+    describe('PUT /api/cards/:id', () => {
+        it('returns a 200 status code after updating card', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                    .put('/api/cards/1')
+                    //.get('/api/cards/1')
+                    .set('Authorization', currentToken)
+                    .send({"business_name": `Testing Again${randomNum}`})
+                    .then(res => {
+                        expect(res.status).toBe(200);
+                    });
+            });
+        });
+    });
+
+    it('returns a an updated property of business_name after updating card', () => {
+        return request(server)
+        .post('/api/login')
+        .send(testLogin)
+        .then(response => {
+            const currentToken = response.body.token;
+            return request(server)
+                .put('/api/cards/1')
+                //.get('/api/cards/1')
+                .set('Authorization', currentToken)
+                .send({"business_name": `Testing Again${randomNum}`})
+                .then(res => {
+                    expect(res.body.business_name).toEqual(`Testing Again${randomNum}`);
+                });
+        });
+    });
