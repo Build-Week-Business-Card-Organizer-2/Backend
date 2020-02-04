@@ -235,6 +235,7 @@ describe('Get /api/cards', () => {
                         .send(testCard) 
                         .then(res => {
                             let card_id = res.body.id;
+                            // now delete that card
                             return request(server)
                                 .delete(`/api/cards/${card_id}`)
                                 .set('Authorization', currentToken)
@@ -244,5 +245,71 @@ describe('Get /api/cards', () => {
                         });
 
                     });    
+        });
+    });
+
+    describe('POST api/cards/:user_id/:card_id', () => {
+        it('returns status code 201 after adding card to collection of specified user', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    const user_id = response.body.user.id;
+                    //create a new card, NOT in this user's collection (YET...)
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send({
+                            "person_name": `Random${randomNum}`,
+                            "business_name": "testBusiness",
+                            "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
+                            "card_owner": 1,
+                            "category": "testCategory"
+                        }) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            //now we're ready to add the card to the user's collection
+                            return request(server)
+                                .post(`/api/cards/${user_id}/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(lastRes => {
+                                    expect(lastRes.status).toBe(201);
+                                });
+
+                        });
+                    });          
+        });
+
+        it('returns a body of length 1 or greater after adding card to collection of specified user', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    const user_id = response.body.user.id;
+                    //create a new card, NOT in this user's collection (YET...)
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send({
+                            "person_name": `Random${randomNum}`,
+                            "business_name": "testBusiness",
+                            "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
+                            "card_owner": 1,
+                            "category": "testCategory"
+                        }) 
+                        .then(res => {
+                            let card_id = res.body.id;
+                            //now we're ready to add the card to the user's collection
+                            return request(server)
+                                .post(`/api/cards/${user_id}/${card_id}`)
+                                .set('Authorization', currentToken)
+                                .then(lastRes => {
+                                    expect(lastRes.body.length).toBeGreaterThanOrEqual(1);
+                                });
+
+                        });
+                    });          
         });
     });
