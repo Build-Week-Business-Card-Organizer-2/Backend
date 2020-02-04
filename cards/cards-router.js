@@ -12,7 +12,7 @@ module.exports = router;
 GET api/cards 
 Gets all cards in the database */
 
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
     Cards.getCards()
     .then(cards => {
         res.status(200).json(cards)
@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 /* GET api/cards/:id/collection
 Gets all cards in a user’s collection */
 
-router.get('/:id/collection', (req, res) => {
+router.get('/:id/collection', restricted, (req, res) => {
     const id = req.params.id;
     Cards.getUserCards(id)
         .then(cards => {
@@ -47,7 +47,7 @@ GET api/cards/:id
 Gets a card by its id
 */
 
-router.get('/:id', (req, res) => {
+router.get('/:id', restricted, (req, res) => {
     const id = req.params.id;
     Cards.getCardById(id)
         .then(card => {
@@ -68,7 +68,7 @@ router.get('/:id', (req, res) => {
 /* POST api/cards
 Adds a card to the database */
 
-router.post('/', (req, res) => {
+router.post('/', restricted, (req, res) => {
     const newCard = req.body;
 
     Cards.addCard(newCard)
@@ -88,7 +88,7 @@ router.post('/', (req, res) => {
 
 /* PUT api/cards/:id
 Updates a card’s info */
-router.put('/:id', (req, res) => {
+router.put('/:id', restricted, (req, res) => {
     const id = req.params.id;
     Cards.updateCard(req.body, id)
         .then(card => {
@@ -105,7 +105,7 @@ router.put('/:id', (req, res) => {
 /* DELETE api/cards/:id
 Removes a card from the database */
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', restricted, (req, res) => {
     const  id = req.params.id
 
     Cards.removeCard(id)
@@ -132,7 +132,7 @@ router.delete('/:id', (req, res) => {
 /* POST api/cards/:user_id/:card_id
 Adds a card to the user’s collection */
 
-router.post('/:user_id/:card_id', (req, res) => {
+router.post('/:user_id/:card_id', restricted, (req, res) => {
     const user_id = req.params.user_id;
     const card_id = req.params.card_id;
     Cards.addCardToCollection(user_id, card_id)
@@ -151,7 +151,7 @@ router.post('/:user_id/:card_id', (req, res) => {
 Removes a card from the user’s collection (not the entire database)
 */
 
-router.delete('/:user_id/:card_id', (req, res) => {
+router.delete('/:user_id/:card_id', restricted, (req, res) => {
     const user_id = req.params.user_id;
     const card_id = req.params.card_id;
     Cards.removeCardFromCollection(user_id, card_id)
