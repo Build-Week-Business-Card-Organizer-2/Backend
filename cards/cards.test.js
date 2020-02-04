@@ -96,3 +96,35 @@ describe('Get /api/cards', () => {
                 });
         });
     });
+
+    describe('GET /api/cards/:id/collection', () => {
+        it('returns a 200 OK status code after getting a card collection', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                .get('/api/cards/1/collection')
+                .set('Authorization', currentToken)
+                .then(res => {
+                    expect(res.status).toBe(200);
+                })
+            })
+        })
+
+        it('returns a card_owner property for the first card after getting a card collection', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                .get('/api/cards/1/collection')
+                .set('Authorization', currentToken)
+                .then(res => {
+                    expect(res.body[0]).toHaveProperty('card_owner');
+                })
+            })
+        })
+    });
