@@ -18,13 +18,13 @@ const testLogin = {
 
 // Sample card to send to DB 
 
-// const testCard = {
-//     "person_name": "testPerson",
-//     "business_name": "testBusiness",
-//     "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
-//     "card_owner": 1,
-//     "category": "testCategory"
-// }
+const testCard = {
+    "person_name": `testPerson${randomNum}`,
+    "business_name": "testBusiness",
+    "url_string": "https://as1.ftcdn.net/jpg/02/04/66/02/500_F_204660283_onveez8hTPfZlIDb9v67AUQA7kwGVX79.jpg",
+    "card_owner": 1,
+    "category": "testCategory"
+}
 
 // Test to GET for /api/cards
 
@@ -37,14 +37,62 @@ describe('Get /api/cards', () => {
             return request(server)
             .post('/api/login')
             .send(testLogin)
-            .then(res => {
+            .then(response => {
+                const currentToken = response.body.token;
                 return request(server)
-                .get('/')
+                .get('/api/cards')
+                .set('Authorization', currentToken)
                 .then(response => {
                     expect(response.status).toBe(200)
                 })
             })
         })
-    })
-})
+    });
+    it('Should return a response body', () => {
+            return request(server)
+            .post('/api/login')
+            .send(testLogin)
+            .then(response => {
+                const currentToken = response.body.token;
+                return request(server)
+                .get('/api/cards')
+                .set('Authorization', currentToken)
+                .then(response => {
+                    expect(response.body).toBeTruthy();
+                })
+            })
+        })
+    });
 
+    describe('POST api/cards', () => {
+        it('should return status code of 201', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send(testCard) 
+                        .then(res => {
+                            expect(res.status).toBe(201);
+                        });  
+                });
+        })
+        it('should return a body with person_name property', () => {
+            return request(server)
+                .post('/api/login')
+                .send(testLogin)
+                .then(response => {
+                    const currentToken = response.body.token;
+                    return request(server)
+                        .post('/api/cards')
+                        .set('Authorization', currentToken)
+                        .send(testCard) 
+                        .then(res => {
+                            expect(res.body).toHaveProperty('card_owner');
+                        });  
+                });
+        });
+    });
