@@ -51,7 +51,7 @@ router.post('/register', (req, res) => {
            // console.log("saved :", saved);
            const user_to_return = {
                //return everything except password
-               "id": saved.id,
+                "id": saved.id,
                 "username": saved.username,
                 "name": saved.name,
                 "job_description": saved.job_description
@@ -75,7 +75,7 @@ router.post('/register', (req, res) => {
               const token = generateToken(user);
               const user_to_return = {
                 //return everything except password
-                "id": user.id,
+                 "id": user.id,
                  "username": user.username,
                  "name": user.name,
                  "job_description": user.job_description

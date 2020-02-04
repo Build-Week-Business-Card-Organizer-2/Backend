@@ -80,7 +80,7 @@ describe('Get /api/cards', () => {
                         });  
                 });
         })
-        it('should return a body with person_name property', () => {
+        it('should return a body with card_owner property', () => {
             return request(server)
                 .post('/api/login')
                 .send(testLogin)
@@ -112,7 +112,6 @@ describe('Get /api/cards', () => {
                 })
             })
         })
-
         it('returns a card_owner property for the first card after getting a card collection', () => {
             return request(server)
             .post('/api/login')
@@ -128,7 +127,6 @@ describe('Get /api/cards', () => {
             })
         })
     });
-
     describe('GET /api/cards/:id', () => {
         it('returns a 200 status code after retreiving card', () => {
             return request(server)
@@ -144,8 +142,7 @@ describe('Get /api/cards', () => {
                 });
             });
         });
-
-        it('returns a url_string property after retreiving card', () => {
+  it('returns a url_string property after retreiving card', () => {
             return request(server)
             .post('/api/login')
             .send(testLogin)
@@ -179,7 +176,7 @@ describe('Get /api/cards', () => {
             });
         });
     });
-
+    
     it('returns a an updated property of business_name after updating card', () => {
         return request(server)
         .post('/api/login')
@@ -244,7 +241,7 @@ describe('Get /api/cards', () => {
                                 });
                         });
 
-                    });    
+                });    
         });
     });
 
@@ -352,7 +349,7 @@ describe('Get /api/cards', () => {
                         });
                     });          
         });
-
+    })
         it('returns a message with user id and card id after successfully deleting card from a collection', () => {
             return request(server)
                 .post('/api/login')
@@ -435,6 +432,3 @@ describe('Get /api/cards', () => {
                         });
                     });          
         });
-
-
-    });
