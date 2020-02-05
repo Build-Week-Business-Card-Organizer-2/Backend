@@ -164,6 +164,7 @@ router.delete('/:id', restricted, (req, res) => {
 /*
 GET api/users/:id
 Gets a user specified by id
+Returns 3 things: 1.user info, 2. array of cards owned by user, 3. array of cards in user's collection
  */
 
 router.get('/:id', restricted, (req, res) => {
