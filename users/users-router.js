@@ -128,7 +128,7 @@ PUT api/:id
 Updates a user profile
 */
 
-router.put('/:id', (req, res) => {
+router.put('/:id', restricted, (req, res) => {
     const id = req.params.id;
     Users.updateUser(id, req.body)
         .then(user => {
@@ -144,7 +144,7 @@ DELETE api/:id
 Removes a user
  */
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', restricted, (req, res) => {
     const { id } = req.params;
 
     Users.removeUser(id)
@@ -166,7 +166,7 @@ GET api/users/:id
 Gets a user specified by id
  */
 
-router.get('/:id', (req, res) => {
+router.get('/:id', restricted, (req, res) => {
     const id = req.params.id;
     Users.findUserById(id)
         .then(user => {

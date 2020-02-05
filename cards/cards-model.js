@@ -4,6 +4,7 @@ module.exports = {
     getCards,
     getUserCards,
     getCardById,
+    getCardsByOwner,
     addCard,
     updateCard,
     removeCard,
@@ -27,6 +28,11 @@ function getCardById(id) {
     return db('cards')
         .where({id: id})
         .first();
+}
+
+function getCardsByOwner(user_id) {
+    return db('cards')
+        .where({card_owner: user_id})
 }
 
 function addCard(card) {
