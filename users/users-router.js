@@ -5,6 +5,7 @@ const Users = require('./users-model.js');
 const restricted = require('../auth/auth-middleware.js');
 const jwt = require('jsonwebtoken');
 const CardsRouter = require('../cards/cards-router.js');
+const Cards = require('../cards/cards-model.js');
 
 const router = express.Router();
 
@@ -158,6 +159,48 @@ router.delete('/:id', (req, res) => {
     .catch(err => {
         res.status(500).json({ error: err, message: 'Failed to delete the user' })    
     });
+});
+
+/*
+GET api/users/:id
+Gets a user specified by id
+ */
+
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    Users.findUserById(id)
+        .then(user => {
+            if (user) {
+                const user_to_return = {
+                    //return everything except password
+                    "id": user.id,
+                    "username": user.username,
+                    "name": user.name,
+                    "job_description": user.job_description,
+                    "email": user.email,
+                    "phone_number": user.phone_number,
+                    "profile_img_src": user.profile_img_src 
+                }
+                Cards.getUserCards(id)
+                    .then(cards => {
+                        if (cards) {
+                            res.status(200).json({message: "Successfully found user", user: user_to_return, collection: cards});
+                        } else {
+                            res.status(404).json({message:`User with id of ${id}'s card collection was not found in database.`});
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).json({message:`Error while attempting to retrieve user with id of ${id}'s card collection`, 
+                            error: err})
+                    });
+            } else {
+                res.status(404).json({message: `User with id of ${id} was not found in database.`})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({message:`Error while attempting to retrive user with id of ${id}.`, error: err})
+        });
+        
 });
 
 module.exports = router;
