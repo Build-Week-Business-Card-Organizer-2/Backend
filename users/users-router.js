@@ -5,6 +5,7 @@ const Users = require('./users-model.js');
 const restricted = require('../auth/auth-middleware.js');
 const jwt = require('jsonwebtoken');
 const CardsRouter = require('../cards/cards-router.js');
+const Cards = require('../cards/cards-model.js');
 
 const router = express.Router();
 
@@ -127,7 +128,7 @@ PUT api/:id
 Updates a user profile
 */
 
-router.put('/:id', (req, res) => {
+router.put('/:id', restricted, (req, res) => {
     const id = req.params.id;
     Users.updateUser(id, req.body)
         .then(user => {
@@ -143,7 +144,7 @@ DELETE api/:id
 Removes a user
  */
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', restricted, (req, res) => {
     const { id } = req.params;
 
     Users.removeUser(id)
@@ -158,6 +159,63 @@ router.delete('/:id', (req, res) => {
     .catch(err => {
         res.status(500).json({ error: err, message: 'Failed to delete the user' })    
     });
+});
+
+/*
+GET api/users/:id
+Gets a user specified by id
+Returns 3 things: 1.user info, 2. array of cards owned by user, 3. array of cards in user's collection
+ */
+
+router.get('/:id', restricted, (req, res) => {
+    const id = req.params.id;
+    Users.findUserById(id)
+        .then(user => {
+            if (user) {
+                const user_to_return = {
+                    //return everything except password
+                    "id": user.id,
+                    "username": user.username,
+                    "name": user.name,
+                    "job_description": user.job_description,
+                    "email": user.email,
+                    "phone_number": user.phone_number,
+                    "profile_img_src": user.profile_img_src 
+                }
+                Cards.getUserCards(id)
+                    .then(cards => {
+                        if (cards) {
+                            Cards.getCardsByOwner(id)
+                                .then(ownersCards => {
+                                    if (ownersCards) {
+                                        res.status(200).json({message: "Successfully found user", 
+                                            user: user_to_return,
+                                            owns: ownersCards, 
+                                            collection: cards});
+                                    } else {
+                                        res.status(404).json({message: `Unable to retrieve cards belonging to user of id ${id}`});
+                                    }
+                                })
+                                .catch(err => {
+                                    res.status(500).json({message: `Error while attempting to retrieve cards belonging to user of id ${id}`});
+                                });
+                            
+                        } else {
+                            res.status(404).json({message:`User with id of ${id}'s card collection was not found in database.`});
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).json({message:`Error while attempting to retrieve user with id of ${id}'s card collection`, 
+                            error: err})
+                    });
+            } else {
+                res.status(404).json({message: `User with id of ${id} was not found in database.`})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({message:`Error while attempting to retrive user with id of ${id}.`, error: err})
+        });
+        
 });
 
 module.exports = router;

@@ -42,6 +42,25 @@ router.get('/:id/collection', restricted, (req, res) => {
         });
 });
 
+/* GET api/users/cards/:id/owns
+Gets all cards that are owned by the user of specified id */
+
+router.get('/:id/owns', restricted, (req, res) => {
+    const id = req.params.id;
+    Cards.getCardsByOwner(id)
+        .then(cards => {
+            if (cards) {
+                res.status(200).json(cards);
+            } else {
+                res.status(404).json({message: `Unable to find cards belonging to user of id ${id}`});
+            }
+        })
+        .catch(err => {
+            res.status(500).json({message:`Error while attempting to find cards belonging to user of id ${id}`,
+                error: err });
+        });    
+});
+
 /*
 GET api/cards/:id
 Gets a card by its id
