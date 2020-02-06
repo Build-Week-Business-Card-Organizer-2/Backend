@@ -11,6 +11,9 @@ describe('Server', () => {
             .then(res => {
                 expect(res.body).toEqual({message: "API up and running on port 5000"})
             })
-    })
+    });
+    it('uses the test environment when testing', function() {
+        expect(process.env.DB_ENV).toBe('testing');
+    });
 });
 

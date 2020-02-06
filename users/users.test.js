@@ -7,7 +7,7 @@ describe('user router', () => {
     it('should register a user and give a status code back of 201', () => {
         let randomNum = Math.random() * 8000;
         return request(server)
-            .post('/api/register')
+            .post('/api/users/register')
             .send({
                 "username": `tester${randomNum}`,
                 "password": "LambdaTesting",
@@ -20,7 +20,7 @@ describe('user router', () => {
     it('Should get token back', () => {
         let randomNum = Math.random() * 8000;
         return request(server)
-        .post('/api/register')
+        .post('/api/users/register')
         .send({
             "username": `tester${randomNum}`,
             "password": "LambdaTesting",
@@ -36,7 +36,7 @@ describe('User Router', () => {
     it('Successful login results in status 200', () => {
         let randomNum = Math.random() * 8000;
         return request(server)
-        .post('/api/register')
+        .post('/api/users/register')
         .send({
             "username": `tester${randomNum}`,
             "password": "LambdaTesting",
@@ -44,7 +44,7 @@ describe('User Router', () => {
         })
         .then(res => {
             return request(server)
-            .post('/api/login')
+            .post('/api/users/login')
             .send({
                 "username": `tester${randomNum}`, 
                 "password": "LambdaTesting"
@@ -57,7 +57,7 @@ describe('User Router', () => {
     it('Successful login returns a token', () => {
         let randomNum = Math.random() * 8000;
         return request(server)
-        .post('/api/register')
+        .post('/api/users/register')
         .send({
             "username": `tester${randomNum}`,
             "password": "LambdaTesting",
@@ -65,7 +65,7 @@ describe('User Router', () => {
         })
         .then(res => {
             return request(server)
-            .post('/api/login')
+            .post('/api/users/login')
             .send({
                 "username": `tester${randomNum}`, 
                 "password": "LambdaTesting"
